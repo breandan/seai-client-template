@@ -15,7 +15,7 @@ fun main(args: Array<String>) {
         pollTimeout = Duration.ofMillis(100)
     ))
 
-    val team = System.getenv()["HOSTNAME"]!!.substringAfterLast("-")
+    val team = InetAddress.getLocalHost().hostName.substringAfterLast("-")
     kafka.consumer(topic = "movielog$team", threads = 2, messageClass = Message::class) { message ->
         // YOUR CODE GOES HERE
     }
