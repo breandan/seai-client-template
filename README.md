@@ -10,7 +10,8 @@
 6. Log onto your team's VM with the team credentials (i.e. `ssh team[TEAM_NUMBER]@fall2020-comp598-[TEAM_NUMBER].cs.mcgill.ca`). This requires you to have first sent us your public key.
 7. Clone your fork onto the remote development environment.
 8. Run `./gradlew run` from inside the project directory.
-9. Check the Kafka log to see that the replies are being received. (i.e. `/usr/bin/kafka-console-consumer --bootstrap-server fall2020-comp598.cs.mcgill.ca:9092 --topic movielog[TEAM_NUMBER] --from-beginning`)
-10. Open the parent project using your favorite IDE.
-11. Update the code in [Main.kt](/src/main/kotlin/Main.kt).
-12. Deploy the changes to your VM, and repeat steps 6-11.
+9. Check that your service is running by visiting [http://fall2020-comp598-[TEAM_NUMBER].cs.mcgill.ca:8082/recommend/[USER_ID]](http://fall2020-comp598-[TEAM_NUMBER].cs.mcgill.ca:8082/recommend/[USER_ID]). This should return a comma-separated list of movie recommendations.
+10. Check the Kafka log to see that the replies are being received.
+11. Open the parent project using your favorite IDE.
+12. Update the code in [Main.kt](/src/main/kotlin/Main.kt).
+13. Deploy the changes to your VM, and repeat steps 6-11.
