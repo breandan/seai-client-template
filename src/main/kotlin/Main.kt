@@ -23,7 +23,7 @@ fun main(args: Array<String>) {
                 // ==================
                 // YOUR CODE GOES HERE
 
-                val recommendations = (0..20).toList().shuffled().joinToString(",")
+                val recommendations = (0..20).toList().joinToString(",")
 
                 // ==================
 
