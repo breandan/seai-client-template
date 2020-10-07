@@ -7,18 +7,7 @@ import java.net.InetSocketAddress
 import java.time.Duration
 
 fun main(args: Array<String>) {
-    val kafka = Kotka(kafkaServers = "fall2020-comp598.cs.mcgill.ca:9092", config = KotkaConfig(
-        partitionCount = 2,
-        replicationFactor = 1,
-        consumerProps = mapOf("max.poll.records" to "1").toProperties(),
-        producerProps = mapOf("batch.size" to "1").toProperties(),
-        pollTimeout = Duration.ofMillis(100)
-    ))
-
-    val team = InetAddress.getLocalHost().hostName.substringAfterLast("-")
-    kafka.consumer(topic = "movielog$team", threads = 2, messageClass = Message::class) { message ->
-        // YOUR CODE GOES HERE
-    }
+//    attachToKafkaServer()
 
     val port = 8082
     println("Starting server at ${InetAddress.getLocalHost().hostName}:${port}")
@@ -30,19 +19,37 @@ fun main(args: Array<String>) {
             PrintWriter(http.responseBody).use { out ->
                 val userId = http.requestURI.path.substringAfterLast("/")
                 println("Received recommendation request for user $userId")
+
                 // ==================
                 // YOUR CODE GOES HERE
 
-                val reccomendations = (0..20).toList().shuffled().joinToString(", ")
+                val recommendations = (0..20).toList().shuffled().joinToString(",")
 
                 // ==================
 
-                out.println(reccomendations)
-                println("Recommended watchlist for user $userId: $reccomendations")
+                out.println(recommendations)
+                println("Recommended watchlist for user $userId: $recommendations")
             }
         }
 
         start()
+    }
+}
+
+fun attachToKafkaServer() {
+    val kafka = Kotka(
+        kafkaServers = "fall2020-comp598.cs.mcgill.ca:9092", config = KotkaConfig(
+            partitionCount = 2,
+            replicationFactor = 1,
+            consumerProps = mapOf("max.poll.records" to "1").toProperties(),
+            producerProps = mapOf("batch.size" to "1").toProperties(),
+            pollTimeout = Duration.ofMillis(100)
+        )
+    )
+
+    val team = InetAddress.getLocalHost().hostName.substringAfterLast("-")
+    kafka.consumer(topic = "movielog$team", threads = 2, messageClass = Message::class) { message ->
+        // YOUR CODE GOES HERE
     }
 }
 
