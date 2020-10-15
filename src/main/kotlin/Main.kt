@@ -5,6 +5,18 @@ import java.io.PrintWriter
 import java.net.InetAddress
 import java.net.InetSocketAddress
 import java.time.Duration
+import org.apache.kafka.streams.KafkaStreams
+
+import org.apache.kafka.common.serialization.Serdes
+import org.apache.kafka.common.utils.Bytes
+
+import org.apache.kafka.streams.state.KeyValueStore
+
+import org.apache.kafka.streams.StreamsBuilder
+
+import org.apache.kafka.streams.StreamsConfig
+import org.apache.kafka.streams.kstream.*
+import java.util.*
 
 fun main(args: Array<String>) {
 //    attachToKafkaServer()
@@ -34,6 +46,20 @@ fun main(args: Array<String>) {
 
         start()
     }
+}
+
+fun printMessagesFromServer() {
+    val props = Properties()
+    props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "fall2020-comp598.cs.mcgill.ca:9092")
+    props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().javaClass)
+    props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().javaClass)
+
+    val builder = StreamsBuilder()
+    val textLines = builder.stream<String, String>("movielog4")
+    textLines.print(Printed.toSysOut())
+
+    val streams = KafkaStreams(builder.build(), props)
+    streams.start()
 }
 
 fun attachToKafkaServer() {
