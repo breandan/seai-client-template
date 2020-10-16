@@ -1,6 +1,8 @@
 # Client Template for SEAI Project
 
-## Instructions
+This is a project template for [COMP 598: Software Engineering for Building Intelligent Systems](https://github.com/jin-guo/COMP598_Fall2020), currently offered at McGill University.
+
+## Getting Started
 
 1. Make sure you are connected to the [CS VPN](https://www.cs.mcgill.ca/docs/remote/dynamic/) (e.g. `ssh -D 9000 [username]@ubuntu.cs.mcgill.ca`).
 2. Check to see that you can access the Movie API service, [`http://fall2020-comp598.cs.mcgill.ca:8080`](http://fall2020-comp598.cs.mcgill.ca:8080). (You should see "Movie API Service".)
@@ -8,13 +10,15 @@
 4. Fork and clone this template. This fork will reside on your team's shared repository.
 5. Clone your fork onto your local development environment.
 6. Log onto your team's VM with the team credentials (i.e. `ssh team[TEAM_NUMBER]@fall2020-comp598-[TEAM_NUMBER].cs.mcgill.ca`). This requires you to have first sent us your public key.
-7. Clone your fork onto the remote development environment.
-8. Run `./gradlew run` from inside the project directory.
-9. Check that your service is running by visiting [http://fall2020-comp598-[TEAM_NUMBER].cs.mcgill.ca:8082/recommend/[USER_ID]](http://fall2020-comp598-[TEAM_NUMBER].cs.mcgill.ca:8082/recommend/[USER_ID]). This should return a comma-separated list of movie recommendations.
+7. Clone your fork onto the remote development environment if you have not already done so.
+8. Run `./gradlew run` from inside the project directory. This may take a minute or two initially.
+9. Check that your service is running by visiting [`http://fall2020-comp598-[TEAM_NUMBER].cs.mcgill.ca:8082/recommend/[USER_ID]`](http://fall2020-comp598-[TEAM_NUMBER].cs.mcgill.ca:8082/recommend/[USER_ID]). This should return a comma-separated list of 20 movie recommendations, from most to least highly recommended for `USER_ID`.
 10. Check the Kafka log to see that the replies are being received.
-11. Open the parent project using your favorite IDE.
+11. Open the parent project using your favorite IDE.<sup>*</sup>
 12. Update the code in [Main.kt](/src/main/kotlin/Main.kt).
 13. Deploy the changes to your VM, and repeat steps 6-11.
+
+<sup>*</sup> If you are using [IntelliJ IDEA](https://www.jetbrains.com/community/education/#students), all batteries are included. If you are using [Eclipse](https://www.eclipse.org/ide), you will need to install the [Kotlin Plugin](https://marketplace.eclipse.org/content/kotlin-plugin-eclipse) to receive syntax highlighting and editor support.
 
 ## Kafka
 
@@ -30,10 +34,10 @@ To read from Kafka, you will need to connect to the Kafka server at `fall2020-co
 You will need to access the user and movie services to access the corresponding features. Below are a few possible options for doing so:
 
 * [OkHttp](https://github.com/square/okhttp) - The dependency is included, but you will need to read the documentation.
-* [Moshi](https://github.com/square/moshi) - JSON binding to Java/Kotlin classes.
-* [`URL.readText()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.io/java.net.-u-r-l/read-text.html) - You will need to you will need to implement the JSON parsing and data bindings yourself.
+* [Moshi](https://github.com/square/moshi) - Lightweight JSON binding to Java/Kotlin classes.
+* [`URL.readText()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.io/java.net.-u-r-l/read-text.html) - You will need to implement the JSON parsing and data bindings yourself.
 
-Below are the endpoints you will need to access:
+The following endpoints provide additional information about the users and movies:
 
 ### User service (example)
 
