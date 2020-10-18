@@ -21,7 +21,7 @@ val kafkaServer = "fall2020-comp598.cs.mcgill.ca:9092"
 fun main(args: Array<String>)  {
 //  Choose one of the following two clients:
 //    attachToKafkaServerUsingKotkaClient()
-//    attachToKafkaServerUsingDefaultClient()
+    attachToKafkaServerUsingDefaultClient()
 
     startRecommendationService()
 }
@@ -45,8 +45,8 @@ private fun handleRequest(http: HttpExchange, out: PrintWriter) {
     val userId = http.requestURI.path.substringAfterLast("/")
     println("Received recommendation request for user $userId")
 
-//    val userJson = URL("http://fall2020-comp598.cs.mcgill.ca:8080/user/$userId").readText()
-//                println("User $userId JSON: $userJson")
+    val userJson = URL("http://fall2020-comp598.cs.mcgill.ca:8080/user/$userId").readText()
+    println("User $userId JSON: $userJson")
 
     // ==================
     // YOUR CODE GOES HERE
@@ -68,7 +68,7 @@ fun attachToKafkaServerUsingDefaultClient() {
     props[DEFAULT_VALUE_SERDE_CLASS_CONFIG] = Serdes.String().javaClass
 
     val builder = StreamsBuilder()
-    val textLines = builder.stream<String, String>("movielog4")
+    val textLines = builder.stream<String, String>(teamTopic)
     textLines.print(Printed.toSysOut())
 
     val streams = KafkaStreams(builder.build(), props)
