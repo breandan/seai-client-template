@@ -20,6 +20,15 @@ This is a project template for [COMP 598: Software Engineering for Building Inte
 
 <sup>*</sup> If you are using [IntelliJ IDEA](https://www.jetbrains.com/community/education/#students), all batteries are included. If you are using [Eclipse](https://www.eclipse.org/ide), you will need to install the [Kotlin Plugin](https://marketplace.eclipse.org/content/kotlin-plugin-eclipse) to receive syntax highlighting and editor support.
 
+## Docker
+
+Your team's designated VM runs Docker. If you need to install any additional packages, this is the place to do so. This template can also be run as follows:
+
+```bash
+docker build [-t] [USERNAME]/[PROJECT] .
+docker run [-it] -p 8082:8082/tcp [USERNAME]/[PROJECT]
+```
+
 ## Kafka
 
 There are many different [Kafka clients](https://docs.confluent.io/current/clients/index.html) you can use to read and write to Kafka. You are free to use any libraries you wish. We have included two in this template:
@@ -28,6 +37,12 @@ There are many different [Kafka clients](https://docs.confluent.io/current/clien
 * [Kotka](https://github.com/blueanvil/kotka/) (a lightweight Kotlin client)
 
 To read from Kafka, you will need to connect to the Kafka server at `fall2020-comp598.cs.mcgill.ca:9092` and stream from the topic `movielog[TEAM_NUMBER]`. The code for doing so is included in [`Main.kt`](/src/main/kotlin/Main.kt).
+
+To stream the Kafka log, you can use the following command:
+
+```bash
+docker run -it bitnami/kafka kafka-console-consumer.sh --bootstrap-server fall2020-comp598.cs.mcgill.ca:9092 --topic movielog1
+```
 
 ## REST API
 
@@ -41,13 +56,13 @@ The following endpoints provide additional information about the users and movie
 
 ### User service (example)
 
-http://fall2020-comp598.cs.mcgill.ca:8080/user/12
+`curl http://fall2020-comp598.cs.mcgill.ca:8080/user/12`
 
 `{"user_id":12,"age":27,"occupation":"college/grad student","gender":"M"}`
 
 ### Movie service (example)
 
-http://fall2020-comp598.cs.mcgill.ca:8080/movie/12
+`curl http://fall2020-comp598.cs.mcgill.ca:8080/movie/12`
 
 ```
 {"id":"dracula+dead+and+loving+it+1995","tmdb_id":12110,"imdb_id":"tt0112896","title":"Dracula: Dead and Loving It","original_title":"Dracula: Dead and Loving It","adult":"False","belongs_to_collection":{},"budget":"0","genres":[{"id":35,"name":"Comedy"},{"id":27,"name":"Horror"}],"homepage":"null","original_language":"en","overview":"When a lawyer shows up at the vampire's doorstep, he falls prey to his charms and joins him in his search for fresh blood. Enter Dr. van Helsing, who may be the only one able to vanquish the count.","popularity":"5.430331","poster_path":"/xve4cgfYItnOhtzLYoTwTVy5FGr.jpg","production_companies":[{"name":"Columbia Pictures","id":5},{"name":"Castle Rock Entertainment","id":97},{"name":"Enigma Pictures","id":6368}],"production_countries":[{"iso_3166_1":"FR","name":"France"},{"iso_3166_1":"US","name":"United States of America"}],"release_date":"1995-12-22","revenue":"0","runtime":88,"spoken_languages":[{"iso_639_1":"en","name":"English"},{"iso_639_1":"de","name":"Deutsch"}],"status":"Released","vote_average":"5.7","vote_count":"210"}
