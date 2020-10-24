@@ -14,22 +14,22 @@ import java.net.URL
 import java.time.Duration
 import java.util.*
 
-val team = InetAddress.getLocalHost().hostName.substringAfterLast("-")
+val whoami = InetAddress.getLocalHost().hostName
+val team = whoami.substringAfterLast("-")
 val teamTopic = "movielog$team"
 val kafkaServer = "fall2020-comp598.cs.mcgill.ca:9092"
+val userService = "http://fall2020-comp598.cs.mcgill.ca:8080/user/"
+val movieService = "http://fall2020-comp598.cs.mcgill.ca:8080/movie/"
+val port = 8082
 
-fun main(args: Array<String>)  {
+fun main(args: Array<String>) {
 //  Choose one of the following two clients:
-//    attachToKafkaServerUsingKotkaClient()
-    attachToKafkaServerUsingDefaultClient()
-
-    startRecommendationService()
+//  val client = attachToKafkaServerUsingKotkaClient()
+    val stream = attachToKafkaServerUsingDefaultClient()
+    val server = startRecommendationService()
 }
 
-private fun startRecommendationService() {
-    val port = 8082
-    println("Starting server at ${InetAddress.getLocalHost().hostName}:${port}")
-
+internal fun startRecommendationService(): HttpServer =
     HttpServer.create(InetSocketAddress(port), 0).apply {
         createContext("/recommend") { http ->
             http.responseHeaders.add("Content-type", "text/plain")
@@ -37,21 +37,23 @@ private fun startRecommendationService() {
             PrintWriter(http.responseBody).use { out -> handleRequest(http, out) }
         }
 
-        start()
+        start().also { println("Starting recommendation service at $whoami:$port") }
     }
-}
+
+private fun getUserData(userId: Int) = URL(userService + userId).readText()
+private fun getMovieData(userId: Int) = URL(movieService + userId).readText()
 
 private fun handleRequest(http: HttpExchange, out: PrintWriter) {
-    val userId = http.requestURI.path.substringAfterLast("/")
+    val userId = http.requestURI.path.substringAfterLast("/").toInt()
     println("Received recommendation request for user $userId")
 
-    val userJson = URL("http://fall2020-comp598.cs.mcgill.ca:8080/user/$userId").readText()
-    println("User $userId JSON: $userJson")
+//    val userJson = getUserData(userId)
+//    println("User $userId JSON: $userJson")
 
     // ==================
     // YOUR CODE GOES HERE
 
-    val recommendations = (0..20).toList().joinToString(",")
+    val recommendations = (1..20).toList().joinToString(",")
 
     // ==================
 
@@ -60,7 +62,7 @@ private fun handleRequest(http: HttpExchange, out: PrintWriter) {
 }
 
 // Documentation: https://kafka.apache.org/documentation/streams/
-fun attachToKafkaServerUsingDefaultClient() {
+fun attachToKafkaServerUsingDefaultClient(): KafkaStreams {
     val props = Properties()
     props[APPLICATION_ID_CONFIG] = "seai-application"
     props[BOOTSTRAP_SERVERS_CONFIG] = kafkaServer
@@ -71,13 +73,12 @@ fun attachToKafkaServerUsingDefaultClient() {
     val textLines = builder.stream<String, String>(teamTopic)
     textLines.print(Printed.toSysOut())
 
-    val streams = KafkaStreams(builder.build(), props)
-    streams.start()
+    return KafkaStreams(builder.build(), props).also { it.start() }
 }
 
 // Documentation: https://github.com/blueanvil/kotka
-fun attachToKafkaServerUsingKotkaClient() {
-    val kafka = Kotka(
+fun attachToKafkaServerUsingKotkaClient(): Kotka =
+    Kotka(
         kafkaServers = kafkaServer, config = KotkaConfig(
             partitionCount = 2,
             replicationFactor = 1,
@@ -85,11 +86,14 @@ fun attachToKafkaServerUsingKotkaClient() {
             producerProps = mapOf("batch.size" to "1").toProperties(),
             pollTimeout = Duration.ofMillis(100)
         )
-    )
-
-    kafka.consumer(topic = teamTopic, threads = 2, messageClass = Message::class) { message ->
-        // YOUR CODE GOES HERE
+    ).apply {
+        consumer(
+            topic = teamTopic,
+            threads = 2,
+            messageClass = Message::class
+        ) { message ->
+            // YOUR CODE GOES HERE
+        }
     }
-}
 
 data class Message(val name: String, val age: Int)

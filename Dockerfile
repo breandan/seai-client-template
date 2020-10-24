@@ -5,4 +5,6 @@ WORKDIR /project
 
 EXPOSE 8082/tcp
 
-RUN ./gradlew run
+RUN ./gradlew test
+
+CMD ./gradlew run
