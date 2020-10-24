@@ -38,6 +38,8 @@ There are many different [Kafka clients](https://docs.confluent.io/current/clien
 
 To read from Kafka, you will need to connect to the Kafka server at `fall2020-comp598.cs.mcgill.ca:9092` and stream from the topic `movielog[TEAM_NUMBER]`. The code for doing so is included in [`Main.kt`](/src/main/kotlin/Main.kt).
 
+More information about Kafka logs and their format can be found on the [project description page](https://github.com/jin-guo/COMP598_Fall2020/blob/master/assignments/Project.md#overall-mechanics-and-infrastructure). We recommend dumping a subset of the logs to disk for prototyping, then dealing with the live stream once the model is stable.
+
 To stream the Kafka log, you can use the following command:
 
 ```bash
