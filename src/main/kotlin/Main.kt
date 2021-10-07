@@ -17,9 +17,9 @@ import java.util.*
 val whoami = InetAddress.getLocalHost().hostName
 val team = whoami.substringAfterLast("-")
 val teamTopic = "movielog$team"
-val kafkaServer = "fall2020-comp598.cs.mcgill.ca:9092"
-val userService = "http://fall2020-comp598.cs.mcgill.ca:8080/user/"
-val movieService = "http://fall2020-comp598.cs.mcgill.ca:8080/movie/"
+val kafkaServer = "fall2021-comp598.cs.mcgill.ca:9092"
+val userService = "http://fall2021-comp598.cs.mcgill.ca:8080/user/"
+val movieService = "http://fall2021-comp598.cs.mcgill.ca:8080/movie/"
 val port = 8082
 
 fun main(args: Array<String>) {
